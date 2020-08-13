@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: "1010-demo"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "1010-deployment"
+  namespace: "1010-demo"
+spec:
+  selector:
+    matchLabels:
+      app: "1010"
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: "1010"
+    spec:
+      containers:
+      - image: cayo999/node-web-app
+        imagePullPolicy: Always
+        name: "1010"
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "service-1010"
+  namespace: "1010-demo"
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+  type: NodePort
+  selector:
+    app: "1010"
