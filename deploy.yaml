@@ -19,8 +19,8 @@ spec:
         app: "1010"
     spec:
       containers:
-      - image: cayo999/node-web-app
-        imagePullPolicy: Always
+      - image: ${REPOSITORY_TAG}
+        imagePullPolicy: Never
         name: "1010"
         ports:
         - containerPort: 3000
