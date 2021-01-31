@@ -3,6 +3,10 @@ const { response } = require('express');
 const Usuario = require('../models/usuario');
 const Medico = require('../models/medico');
 const Hospital = require('../models/hospital');
+const Recinto = require('../models/recinto');
+const Delegado = require('../models/delegado');
+
+
 
 
 const getTodo = async(req, res = response ) => {
@@ -40,8 +44,19 @@ const getDocumentosColeccion = async(req, res = response ) => {
                                 .populate('hospital', 'nombre img');
         break;
 
+        case 'delegados':
+            data = await Delegado.find({ "$or": [{nombre: regex} ,{ ci: regex}]})
+                                .populate('usuario', 'nombre img')
+                                .populate('recinto', 'nombre img');
+        break;
+
         case 'hospitales':
             data = await Hospital.find({ nombre: regex })
+                                    .populate('usuario', 'nombre img');
+        break;
+
+        case 'recintos':
+            data = await Recinto.find({ nombre: regex })
                                     .populate('usuario', 'nombre img');
         break;
 
