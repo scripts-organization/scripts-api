@@ -15,6 +15,12 @@ const RecintoSchema = Schema(
     cantidadmesas: {
       type: Number,
     },
+    latitud: {
+      type: Number,
+    },
+    longitud: {
+      type: Number,
+    },
     img: {
       type: String,
     },

@@ -19,8 +19,8 @@ const getMenuFrontEnd = (role = 'USER_ROLE') => {
           icono: 'mdi mdi-folder-lock-open',
           submenu: [
             // { titulo: 'Usuarios', url: 'usuarios' },
-            { titulo: 'Hospitales', url: 'hospitales' },
-            { titulo: 'Médicos', url: 'medicos' },
+            // { titulo: 'Hospitales', url: 'hospitales' },
+            // { titulo: 'Médicos', url: 'medicos' },
             //{ titulo: 'Recintos', url: 'recintos' },
             { titulo: 'Delegados', url: 'delegados' },
           ]
@@ -30,7 +30,10 @@ const getMenuFrontEnd = (role = 'USER_ROLE') => {
     if ( role === 'ADMIN_ROLE' ) {
         menu[1].submenu.unshift(
           { titulo: 'Usuarios', url: 'usuarios' },
-          { titulo: 'Recintos', url: 'recintos' }
+          { titulo: 'Recintos', url: 'recintos' },
+          { titulo: 'Registro Jefes Recinto', url: 'jeferecinto' },
+
+
         )
     }
 

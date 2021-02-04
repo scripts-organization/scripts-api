@@ -10,6 +10,7 @@ const { validarJWT } = require('../middlewares/validar-jwt');
 
 const {
     getDelegados,
+    getDelegadosPorRecinto,
     crearDelegado,
     actualizarDelegado,
     borrarDelegado,
@@ -20,6 +21,8 @@ const {
 const router = Router();
 
 router.get( '/', validarJWT, getDelegados );
+
+router.get( '/recinto/:idRecinto', validarJWT, getDelegadosPorRecinto );
 
 router.post( '/',
     [

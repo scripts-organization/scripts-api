@@ -15,6 +15,12 @@ const UsuarioSchema = Schema({
         type: String,
         required: true,
     },
+    ci: {
+        type: String,
+    },
+    celular: {
+        type: String,
+    },
     img: {
         type: String,
     },
@@ -27,6 +33,11 @@ const UsuarioSchema = Schema({
         type: Boolean,
         default: false
     },
+    recinto: {
+        type: Schema.Types.ObjectId,
+        ref: "Recinto",
+        unique: true,
+      },
 });
 
 

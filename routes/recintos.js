@@ -13,6 +13,7 @@ const {
   crearRecinto,
   actualizarRecinto,
   borrarRecinto,
+  getRecintoById
 } = require("../controllers/Recintos");
 
 const router = Router();
@@ -38,6 +39,12 @@ router.put(
   ],
   actualizarRecinto
 );
+
+router.get( '/:id',
+    
+    getRecintoById
+);
+
 
 router.delete("/:id", validarJWT, borrarRecinto);
 

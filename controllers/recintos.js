@@ -11,6 +11,17 @@ const getRecintos = async (req, res = response) => {
   });
 };
 
+const getRecintoById = async (req, res = response) => {
+  const id = req.params.id;
+
+  const recinto = await Recinto.findById(id).populate("usuario", "nombre img");
+
+  res.json({
+    ok: true,
+    recinto,
+  });
+};
+
 const crearRecinto = async (req, res = response) => {
   const uid = req.uid;
   const recinto = new Recinto({
@@ -107,4 +118,5 @@ module.exports = {
   crearRecinto,
   actualizarRecinto,
   borrarRecinto,
+  getRecintoById
 };
