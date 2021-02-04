@@ -10,6 +10,7 @@ const { validarJWT } = require("../middlewares/validar-jwt");
 
 const {
   getRecintos,
+  getRecintosBuscar,
   crearRecinto,
   actualizarRecinto,
   borrarRecinto,
@@ -18,7 +19,10 @@ const {
 
 const router = Router();
 
-router.get("/", getRecintos);
+router.get("/",validarJWT, getRecintos);
+router.get( '/:id',validarJWT, getRecintoById);
+router.get( '/buscar/:busqueda',validarJWT, getRecintosBuscar);
+
 
 router.post(
   "/",
@@ -40,10 +44,7 @@ router.put(
   actualizarRecinto
 );
 
-router.get( '/:id',
-    
-    getRecintoById
-);
+
 
 
 router.delete("/:id", validarJWT, borrarRecinto);

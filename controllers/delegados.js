@@ -4,14 +4,12 @@ const Delegado = require("../models/delegado");
 const Usuario = require('../models/usuario');
 
 const getDelegados = async (req, res = response) => {
-  //console.log(req.header("x-token"));
-  console.log(req.uid);
   const uid = req.uid;
   const usuarioDB = await Usuario.findById(uid);
 
   if (usuarioDB.role === "ADMIN_ROLE") {
     const delegados = await Delegado.find()
-      .populate("usuario", "nombre img")
+      // .populate("usuario", "nombre img")
       .populate("recinto", "nombre img");
     res.json({
       ok: true,
@@ -19,13 +17,38 @@ const getDelegados = async (req, res = response) => {
     });
   } else {
     const delegados = await Delegado.find({ recinto: { _id: usuarioDB.recinto } })
-    .populate("usuario", "nombre img")
+    // .populate("usuario", "nombre img")
     .populate("recinto", "nombre img");
 
   res.json({
     ok: true,
     delegados,
   });
+  }
+};
+
+const getDelegadosBuscar = async (req, res = response) => {
+  const uid = req.uid;
+  const usuarioDB = await Usuario.findById(uid);
+  const busqueda = req.params.busqueda 
+  const regex    = new RegExp( busqueda, 'i' );
+
+  if (usuarioDB.role === "ADMIN_ROLE") {
+    const delegados = await Delegado.find( { nombre: regex } )
+      // .populate("usuario", "nombre img")
+      .populate("recinto", "nombre img");
+      res.json({
+        ok: true,
+        delegados,
+      });
+  } else {
+    const delegados = await Delegado.find({ recinto: { _id: usuarioDB.recinto } })
+    // .populate("usuario", "nombre img")
+    .populate("recinto", "nombre img");
+    res.json({
+      ok: true,
+      delegados,
+    });
   }
 };
 
@@ -156,6 +179,7 @@ const borrarDelegado = async (req, res = response) => {
 
 module.exports = {
   getDelegados,
+  getDelegadosBuscar,
   getDelegadosPorRecinto,
   crearDelegado,
   actualizarDelegado,

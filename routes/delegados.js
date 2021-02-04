@@ -10,6 +10,7 @@ const { validarJWT } = require('../middlewares/validar-jwt');
 
 const {
     getDelegados,
+    getDelegadosBuscar,
     getDelegadosPorRecinto,
     crearDelegado,
     actualizarDelegado,
@@ -21,6 +22,10 @@ const {
 const router = Router();
 
 router.get( '/', validarJWT, getDelegados );
+router.get( '/:id', validarJWT, getDelegadoById );
+router.get("/buscar/:busqueda",validarJWT, getDelegadosBuscar);
+
+
 
 router.get( '/recinto/:idRecinto', validarJWT, getDelegadosPorRecinto );
 
@@ -49,10 +54,7 @@ router.delete( '/:id',
     borrarDelegado
 );
 
-router.get( '/:id',
-    validarJWT,
-    getDelegadoById
-);
+
 
 
 

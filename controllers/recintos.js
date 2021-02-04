@@ -1,14 +1,54 @@
 const { response } = require("express");
 
 const Recinto = require("../models/recinto");
+const Usuario = require('../models/usuario');
 
 const getRecintos = async (req, res = response) => {
-  const recintos = await Recinto.find().populate("usuario", "nombre img");
+  const uid = req.uid;
+  // console.log(uid);
+  const usuarioDB = await Usuario.findById(uid);
+  if (usuarioDB.role === "ADMIN_ROLE") {
 
-  res.json({
-    ok: true,
-    recintos,
-  });
+    const recintos = await Recinto.find().populate("usuario", "nombre img");
+    res.json({
+      ok: true,
+      recintos,
+    });
+  } else {
+    const recintos = await Recinto.find({ _id: usuarioDB.recinto })
+        .populate("usuario", "nombre img");
+    res.json({
+      ok: true,
+      recintos,
+    });
+  }
+};
+
+
+const getRecintosBuscar = async (req, res = response) => {
+  console.log("init recintoBuscar");
+  const uid = req.uid;
+  
+  const usuarioDB = await Usuario.findById(uid);
+  const busqueda = req.params.busqueda || '';
+  const regex    = new RegExp( busqueda, 'i' );
+  // console.log("----",usuarioDB.recinto);
+
+  if (usuarioDB.role === "ADMIN_ROLE") {
+    const recintos = await Recinto.find({ nombre: regex })
+    .populate("usuario", "nombre img");
+      res.json({
+        ok: true,
+        recintos,
+      });
+  } else {
+    const recintos = await Recinto.find({ _id: usuarioDB.recinto })
+        .populate("usuario", "nombre img");
+      res.json({
+        ok: true,
+        recintos,
+      });
+  }
 };
 
 const getRecintoById = async (req, res = response) => {
@@ -115,6 +155,7 @@ const borrarRecinto = async (req, res = response) => {
 
 module.exports = {
   getRecintos,
+  getRecintosBuscar,
   crearRecinto,
   actualizarRecinto,
   borrarRecinto,
