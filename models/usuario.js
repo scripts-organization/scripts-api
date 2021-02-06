@@ -35,8 +35,7 @@ const UsuarioSchema = Schema({
     },
     recinto: {
         type: Schema.Types.ObjectId,
-        ref: "Recinto",
-        unique: true,
+        ref: "Recinto"
       },
 });
 
