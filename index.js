@@ -5,6 +5,9 @@ const express = require("express");
 const cors = require("cors");
 
 const { dbConnection } = require("./database/config");
+const bodyParser = require('body-parser');
+const multer = require('multer');
+const upload = multer();
 
 // Crear el servidor de express
 const app = express();
@@ -14,6 +17,11 @@ app.use(cors());
 
 // Lectura y parseo del body
 app.use(express.json());
+//urlencoded
+app.use(express.urlencoded({ extended: true }));
+
+app.use(upload.array()); 
+
 
 // Base de datos
 dbConnection();
@@ -31,6 +39,9 @@ app.use("/api/todo", require("./routes/busquedas"));
 app.use("/api/login", require("./routes/auth"));
 app.use("/api/upload", require("./routes/uploads"));
 
+app.use("/api/mesa_alcalde", require("./routes/mesa_alcalde"));
+
+
 // Lo último
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "public/index.html"));
@@ -39,3 +50,4 @@ app.get("*", (req, res) => {
 app.listen(process.env.PORT, () => {
   console.log("Servidor corriendo en puerto " + process.env.PORT);
 });
+
