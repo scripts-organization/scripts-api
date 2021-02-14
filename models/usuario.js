@@ -33,6 +33,10 @@ const UsuarioSchema = Schema({
         type: Boolean,
         default: false
     },
+    jefe: {
+        type: Boolean,
+        default: false
+    },
     recinto: {
         type: Schema.Types.ObjectId,
         ref: "Recinto",

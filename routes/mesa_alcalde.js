@@ -14,16 +14,16 @@ const {
   crearMesaAlcalde,
   actualizarMesaAlcalde,
   getMesaAlcaldeById,
-  getMesaAlcaldeByCodido
+  getMesaAlcaldeByCodido,
+  crearfoto,
 } = require("../controllers/mesa_alcalde");
 
 const router = Router();
 
-router.get("/",validarJWT, getMesaAlcalde);
-router.get( '/:id',validarJWT, getMesaAlcaldeById);
-router.get( '/codigo/:codigo',validarJWT, getMesaAlcaldeByCodido);
-router.get( '/buscar/:busqueda',validarJWT, getMesaAlcaldeBuscar);
-
+router.get("/", validarJWT, getMesaAlcalde);
+router.get("/:id", validarJWT, getMesaAlcaldeById);
+router.get("/codigo/:codigo", validarJWT, getMesaAlcaldeByCodido);
+router.get("/buscar/:busqueda", validarJWT, getMesaAlcaldeBuscar);
 
 router.post(
   "/",
@@ -39,12 +39,22 @@ router.put(
   "/:id",
   [
     validarJWT,
-    check("sumate", "los datos de la casilla sumate son necesarios").not().isEmpty(),
+    check("sumate", "los datos de la casilla sumate son necesarios")
+      .not()
+      .isEmpty(),
     validarCampos,
   ],
   actualizarMesaAlcalde
 );
 
-
+router.put(
+  "/foto/:id",
+  [
+    validarJWT,
+    // check("codigo", "El codigo del Recinto es necesario").not().isEmpty(),
+    validarCampos,
+  ],
+  crearfoto
+);
 
 module.exports = router;

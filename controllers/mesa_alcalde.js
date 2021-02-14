@@ -2,6 +2,9 @@ const { response } = require("express");
 
 const MesaAlcalde = require("../models/mesa_alcalde");
 const Usuario = require('../models/usuario');
+const aws = require('aws-sdk');
+const fs = require('fs');
+
 
 const getMesaAlcalde = async (req, res = response) => {
   const uid = req.uid;
@@ -137,7 +140,140 @@ const actualizarMesaAlcalde = async (req, res = response) => {
       msg: "Hable con el administrador",
     });
   }
+
+
+
 };
+
+
+
+
+
+const crearfoto = async (req, res = response) => {
+  const idMesaAlcalde = req.params.id
+  const uid = req.uid;
+  const usuarioDB = await Usuario.findById(uid);
+  const recintoId = usuarioDB.recinto
+
+  const mesaAlcalde = await MesaAlcalde.findById(idMesaAlcalde);
+  if (!mesaAlcalde) {
+    return res.status(404).json({
+      ok: true,
+      msg: "Mesa de Alcalde no encontrada",
+    });
+  }
+  const codigoMesa = mesaAlcalde.codigo;
+
+  let ResponseData = [];
+  // console.log(req.body.codigo);
+  aws.config.setPromisesDependency();
+  aws.config.update({
+    accessKeyId: process.env.ACCESSKEYID,
+    secretAccessKey: process.env.SECRETACCESSKEY,
+    region: process.env.REGION
+  });
+  const file = req.files;
+  const s3 = new aws.S3();
+  file.map((item) => {
+      var params = {
+        Bucket: process.env.BUCKET_NAME,
+        Key: `${recintoId}/${codigoMesa}_${item.originalname}`,
+        Body: fs.createReadStream(item.path),
+        ACL: 'public-read'
+  };
+    s3.upload(params, async (err, data) => {
+      if (err) {
+        console.log('Error occured while trying to upload to S3 bucket', err);
+      }
+      if (data) {
+        ResponseData.push(data);      
+        fs.unlinkSync(item.path); // Empty temp folder
+        if(ResponseData.length === file.length) {
+          
+          try {
+              // const mesaAlcalde = await MesaAlcalde.findById(idMesaAlcalde);
+              const cambiosMesaAlcalde = {
+                ...req.body,
+                usuario: uid,
+              };
+              if(ResponseData[0]) cambiosMesaAlcalde.img_1 = ResponseData[0].Location
+              if(ResponseData[1]) cambiosMesaAlcalde.img_2 = ResponseData[1].Location
+              if(ResponseData[2]) cambiosMesaAlcalde.img_3 = ResponseData[2].Location         
+              const mesaAlcaldeActualizado = await MesaAlcalde.findByIdAndUpdate(
+                idMesaAlcalde,
+                cambiosMesaAlcalde,
+                { new: true }
+              );
+          
+              res.json({
+                ok: true,
+                MesaAlcalde: mesaAlcaldeActualizado,
+              });
+          } catch (error) {
+              console.log(error);          
+              res.status(500).json({
+                ok: false,
+                msg: "Hable con el administrador",
+              });
+          }
+        }      
+      }
+
+    });
+  })
+};
+
+
+
+// const crearfoto = async (req, res = response) => {
+
+//   const uid = req.uid;
+//   const codigoMesa = req.body.codigo;
+//   const usuarioDB = await Usuario.findById(uid);
+//   const recintoId = usuarioDB.recinto
+//   console.log(req.body.codigo);
+
+//   aws.config.setPromisesDependency();
+//   aws.config.update({
+//     accessKeyId: process.env.ACCESSKEYID,
+//     secretAccessKey: process.env.SECRETACCESSKEY,
+//     region: process.env.REGION
+//   });
+
+//   const s3 = new aws.S3();
+//     const params = {
+//       Bucket: process.env.BUCKET_NAME,
+//       Body: fs.createReadStream(req.file.path),
+//       Key: `${recintoId}/${codigoMesa}_${req.file.originalname}`
+//     };
+
+//     s3.upload(params, async (err, data) => {
+//       if (err) {
+//         console.log('Error occured while trying to upload to S3 bucket', err);
+//       }
+
+//       if (data) {
+//         fs.unlinkSync(req.file.path); // Empty temp folder
+//         const locationUrl = data.Location;
+//         let mesaAlcalde = new MesaAlcalde({ ...req.body, usuario: uid, img_2: locationUrl });
+//         try {
+//           const mesaAlcaldeDB = await mesaAlcalde.save();
+      
+//           res.json({
+//             ok: true,
+//             mesaAlcalde: mesaAlcaldeDB,
+//           });
+//         } catch (error) {
+//           console.log(error);
+//           res.status(500).json({
+//             ok: false,
+//             msg: "Hable con el administrador",
+//           });
+//         }
+//       }
+//     });
+
+// };
 
 
 module.exports = {
@@ -146,5 +282,6 @@ module.exports = {
   crearMesaAlcalde,
   actualizarMesaAlcalde,
   getMesaAlcaldeById,
-  getMesaAlcaldeByCodido
+  getMesaAlcaldeByCodido,
+  crearfoto
 };

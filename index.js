@@ -7,7 +7,7 @@ const cors = require("cors");
 const { dbConnection } = require("./database/config");
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const upload = multer();
+const upload = multer({ dest: 'uploads/' });
 
 // Crear el servidor de express
 const app = express();
@@ -20,7 +20,9 @@ app.use(express.json());
 //urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-app.use(upload.array()); 
+// app.use(upload.array()); 
+// app.use(upload.single('img_2'));
+app.use(upload.array('images',12));
 
 
 // Base de datos

@@ -14,15 +14,14 @@ const {
   crearRecinto,
   actualizarRecinto,
   borrarRecinto,
-  getRecintoById
+  getRecintoById,
 } = require("../controllers/Recintos");
 
 const router = Router();
 
-router.get("/",validarJWT, getRecintos);
-router.get( '/:id',validarJWT, getRecintoById);
-router.get( '/buscar/:busqueda',validarJWT, getRecintosBuscar);
-
+router.get("/", validarJWT, getRecintos);
+router.get("/:id", validarJWT, getRecintoById);
+router.get("/buscar/:busqueda", validarJWT, getRecintosBuscar);
 
 router.post(
   "/",
@@ -43,9 +42,6 @@ router.put(
   ],
   actualizarRecinto
 );
-
-
-
 
 router.delete("/:id", validarJWT, borrarRecinto);
 
