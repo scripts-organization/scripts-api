@@ -10,7 +10,7 @@ const getMesaAlcalde = async (req, res = response) => {
   const uid = req.uid;
   // console.log(uid);
   const usuarioDB = await Usuario.findById(uid);
-  console.log(usuarioDB.recinto);
+  // console.log(usuarioDB.recinto);
 
   if (usuarioDB.role === "ADMIN_ROLE") {
 
@@ -60,7 +60,9 @@ const getMesaAlcaldeBuscar = async (req, res = response) => {
 const getMesaAlcaldeById = async (req, res = response) => {
   const id = req.params.id;
 
-  const mesaAlcalde = await MesaAlcalde.findById(id).populate("usuario", "nombre img");
+  const mesaAlcalde = await MesaAlcalde.findById(id)
+    .populate("usuario", "nombre img")
+    .populate("recinto", "nombre img");
 
   res.json({
     ok: true,
@@ -119,6 +121,7 @@ const actualizarMesaAlcalde = async (req, res = response) => {
 
     const cambiosMesaAlcalde = {
       ...req.body,
+      llenada: true,
       usuario: uid,
     };
 
@@ -194,6 +197,7 @@ const crearfoto = async (req, res = response) => {
               // const mesaAlcalde = await MesaAlcalde.findById(idMesaAlcalde);
               const cambiosMesaAlcalde = {
                 ...req.body,
+                fotoenviada: true,
                 usuario: uid,
               };
               if(ResponseData[0]) cambiosMesaAlcalde.img_1 = ResponseData[0].Location
@@ -223,57 +227,6 @@ const crearfoto = async (req, res = response) => {
   })
 };
 
-
-
-// const crearfoto = async (req, res = response) => {
-
-//   const uid = req.uid;
-//   const codigoMesa = req.body.codigo;
-//   const usuarioDB = await Usuario.findById(uid);
-//   const recintoId = usuarioDB.recinto
-//   console.log(req.body.codigo);
-
-//   aws.config.setPromisesDependency();
-//   aws.config.update({
-//     accessKeyId: process.env.ACCESSKEYID,
-//     secretAccessKey: process.env.SECRETACCESSKEY,
-//     region: process.env.REGION
-//   });
-
-//   const s3 = new aws.S3();
-//     const params = {
-//       Bucket: process.env.BUCKET_NAME,
-//       Body: fs.createReadStream(req.file.path),
-//       Key: `${recintoId}/${codigoMesa}_${req.file.originalname}`
-//     };
-
-//     s3.upload(params, async (err, data) => {
-//       if (err) {
-//         console.log('Error occured while trying to upload to S3 bucket', err);
-//       }
-
-//       if (data) {
-//         fs.unlinkSync(req.file.path); // Empty temp folder
-//         const locationUrl = data.Location;
-//         let mesaAlcalde = new MesaAlcalde({ ...req.body, usuario: uid, img_2: locationUrl });
-//         try {
-//           const mesaAlcaldeDB = await mesaAlcalde.save();
-      
-//           res.json({
-//             ok: true,
-//             mesaAlcalde: mesaAlcaldeDB,
-//           });
-//         } catch (error) {
-//           console.log(error);
-//           res.status(500).json({
-//             ok: false,
-//             msg: "Hable con el administrador",
-//           });
-//         }
-//       }
-//     });
-
-// };
 
 
 module.exports = {

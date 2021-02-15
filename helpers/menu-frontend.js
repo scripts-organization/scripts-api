@@ -29,7 +29,7 @@ const getMenuFrontEnd = (role = "USER_ROLE") => {
       titulo: "Validadores",
       icono: "mdi mdi-folder-lock-open",
       submenu: [
-        { titulo: "Mesas Alcalde", url: "alcalde" },
+        { titulo: "Alcalde", url: "validar-alcalde" },
       ],
     },
   ];

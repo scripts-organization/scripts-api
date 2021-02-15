@@ -73,15 +73,39 @@ const MesaAlcaldeSchema = Schema(
       type: String,
       default: ""
     },
+    fotoenviada: {
+      type: Boolean,
+      default: false
+    },
+    observada: {
+      type: Boolean,
+      default: false
+    },
     usuario: {
       required: true,
       type: Schema.Types.ObjectId,
       ref: "Usuario",
     },
     recinto: {
-      type: Schema.Types.ObjectId,
-      ref: "Recinto",
       required: true,
+      type: Schema.Types.ObjectId,
+      ref: "Recinto"
+    },
+    revisadafoto: {
+      type: Boolean,
+      default: false
+    },
+    revisorfoto: {
+      type: Schema.Types.ObjectId,
+      ref: "Usuario",
+    },
+    revisadaacta: {
+      type: Boolean,
+      default: false
+    },
+    revisoracta: {
+      type: Schema.Types.ObjectId,
+      ref: "Usuario",
     },
   },
   { collection: "mesasAlcalde" }
