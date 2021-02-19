@@ -15,7 +15,7 @@ const {
   actualizarRecinto,
   borrarRecinto,
   getRecintoById,
-} = require("../controllers/Recintos");
+} = require("../controllers/recintos");
 
 const router = Router();
 
