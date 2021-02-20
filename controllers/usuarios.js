@@ -53,10 +53,21 @@ const getUsuarios = async(req, res) => {
         
             });
         }
-    
+}
 
-   
 
+const getUsuariosOperators = async(req, res) => {
+
+    const [usuarios, total] = await Promise.all([
+        Usuario.find({"role" : "OPERATOR_ROLE"}, "nombre celular role"),
+        Usuario.countDocuments(),
+    ]);
+    res.json({
+        ok: true,
+        usuarios,
+        total
+    });
+        
 }
 
 const crearUsuario = async(req, res = response) => {
@@ -207,6 +218,7 @@ const borrarUsuario = async(req, res = response ) => {
 
 module.exports = {
     getUsuarios,
+    getUsuariosOperators,
     crearUsuario,
     actualizarUsuario,
     borrarUsuario
