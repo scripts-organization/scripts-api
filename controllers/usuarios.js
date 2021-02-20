@@ -15,26 +15,47 @@ const getUsuarios = async(req, res) => {
     
     }
 
+    const uid = req.uid;
+    const usuarioDB = await Usuario.findById(uid);
+
     const desde = Number(req.query.desde) || 0;
 
-    const [ usuarios, total ] = await Promise.all([
-        Usuario
-            .find({}, 'nombre email role google img').populate('recinto','nombre img')
-            .skip( desde )
-            .limit( 5 ),
+    if (usuarioDB.role === "ADMIN_ROLE") {
+            const [usuarios, total] = await Promise.all([
+                Usuario.find({}, "nombre email jefe celular role asistencia google img")
+                .populate("recinto", "nombre img")
+                .skip(desde)
+                .limit(50),
 
-        Usuario.countDocuments()
-    ]);
+                Usuario.countDocuments(),
+            ]);
+            res.json({
+                ok: true,
+                usuarios,
+                total,
+                infoCluster,
+        
+            });
+        } else {
+            const [usuarios, total] = await Promise.all([
+                Usuario.find({recinto: { _id: usuarioDB.recinto }}, "nombre email jefe celular role asistencia google img")
+                .populate("recinto", "nombre img")
+                .skip(desde)
+                .limit(50),
 
+                Usuario.countDocuments(),
+            ]);
+            res.json({
+                ok: true,
+                usuarios,
+                total,
+                infoCluster,
+        
+            });
+        }
     
 
-    res.json({
-        ok: true,
-        usuarios,
-        total,
-        infoCluster,
-
-    });
+   
 
 }
 

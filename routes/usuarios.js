@@ -31,10 +31,10 @@ router.post( '/',
 router.put( '/:id',
     [
         validarJWT,
-        varlidarADMIN_ROLE_o_MismoUsuario,
-        check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+        // varlidarADMIN_ROLE_o_MismoUsuario,
+        // check('nombre', 'El nombre es obligatorio').not().isEmpty(),
         check('email', 'El email es obligatorio').isEmail(),
-        check('role', 'El role es obligatorio').not().isEmpty(),
+        // check('role', 'El role es obligatorio').not().isEmpty(),
         validarCampos,
     ],
     actualizarUsuario
