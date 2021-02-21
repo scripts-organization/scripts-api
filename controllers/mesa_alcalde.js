@@ -121,7 +121,6 @@ const actualizarMesaAlcalde = async (req, res = response) => {
 
     const cambiosMesaAlcalde = {
       ...req.body,
-      llenada: true,
       usuario: uid,
     };
 

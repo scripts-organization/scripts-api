@@ -39,9 +39,9 @@ router.put(
   "/:id",
   [
     validarJWT,
-    check("sumate", "los datos de la casilla sumate son necesarios")
-      .not()
-      .isEmpty(),
+    // check("sumate", "los datos de la casilla sumate son necesarios")
+    //   .not()
+    //   .isEmpty(),
     validarCampos,
   ],
   actualizarMesaAlcalde

@@ -13,51 +13,99 @@ const MesaAlcaldeSchema = Schema(
     habilitados: {
       type: Number,
     },
-    llenada: {
+    a_llenada: {
       type: Boolean,
       default: false
     },
-    sumate: {
+    a_sumate: {
       type: Number,
       default: 0
     },
-    fpv: {
+    a_fpv: {
       type: Number,
       default: 0
     },
-    pdc: {
+    a_pdc: {
       type: Number,
       default: 0
       },
-    somos: {
+    a_somos: {
       type: Number,
       default: 0
     },
-    mas_ipsp: {
+    a_mas_ipsp: {
       type: Number,
       default: 0
       },
-    ca: {
+    a_ca: {
       type: Number,
       default: 0
     },
-    mts: {
+    a_mts: {
       type: Number,
       default: 0
       },
-    pan_bol: {
+    a_pan_bol: {
       type: Number,
       default: 0
     },
-    ucs: {
+    a_ucs: {
       type: Number,
       default: 0
     },
-    blancos: {
+    a_blancos: {
       type: Number,
       default: 0
     },
-    nulos: {
+    a_nulos: {
+      type: Number,
+      default: 0
+    },
+    c_llenada: {
+      type: Boolean,
+      default: false
+    },
+    c_sumate: {
+      type: Number,
+      default: 0
+    },
+    c_fpv: {
+      type: Number,
+      default: 0
+    },
+    c_pdc: {
+      type: Number,
+      default: 0
+      },
+    c_somos: {
+      type: Number,
+      default: 0
+    },
+    c_mas_ipsp: {
+      type: Number,
+      default: 0
+      },
+    c_ca: {
+      type: Number,
+      default: 0
+    },
+    c_mts: {
+      type: Number,
+      default: 0
+      },
+    c_pan_bol: {
+      type: Number,
+      default: 0
+    },
+    c_ucs: {
+      type: Number,
+      default: 0
+    },
+    c_blancos: {
+      type: Number,
+      default: 0
+    },
+    c_nulos: {
       type: Number,
       default: 0
     },
