@@ -155,7 +155,7 @@ const crearfoto = async (req, res = response) => {
   const idMesaAlcalde = req.params.id
   const uid = req.uid;
   const usuarioDB = await Usuario.findById(uid);
-  const recintoId = usuarioDB.recinto
+  // const recintoId = usuarioDB.recinto
 
   const mesaAlcalde = await MesaAlcalde.findById(idMesaAlcalde);
   if (!mesaAlcalde) {
@@ -165,6 +165,7 @@ const crearfoto = async (req, res = response) => {
     });
   }
   const codigoMesa = mesaAlcalde.codigo;
+  const recintoId = mesaAlcalde.recinto
 
   let ResponseData = [];
   // console.log(req.body.codigo);
