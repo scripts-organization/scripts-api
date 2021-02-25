@@ -13,6 +13,7 @@ const {
   getMesaAlcaldeBuscar,
   crearMesaAlcalde,
   actualizarMesaAlcalde,
+  resetMesaAlcalde,
   getMesaAlcaldeById,
   getMesaAlcaldeByCodido,
   crearfoto,
@@ -45,6 +46,18 @@ router.put(
     validarCampos,
   ],
   actualizarMesaAlcalde
+);
+
+router.put(
+  "/reset/:id",
+  [
+    validarJWT,
+    // check("sumate", "los datos de la casilla sumate son necesarios")
+    //   .not()
+    //   .isEmpty(),
+    validarCampos,
+  ],
+  resetMesaAlcalde
 );
 
 router.put(

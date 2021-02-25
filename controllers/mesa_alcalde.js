@@ -142,10 +142,79 @@ const actualizarMesaAlcalde = async (req, res = response) => {
       msg: "Hable con el administrador",
     });
   }
-
-
-
 };
+
+const resetMesaAlcalde = async (req, res = response) => {
+  const id = req.params.id;
+  const uid = req.uid;
+
+  try {
+    const mesaAlcalde = await MesaAlcalde.findById(id);
+
+    if (!mesaAlcalde) {
+      return res.status(404).json({
+        ok: true,
+        msg: "Mesa Alcalde no encontrado por id",
+      });
+    }
+
+    const cambiosMesaAlcalde = {
+      ...req.body,
+      a_llenada: false,
+      a_sumate: 0,
+      a_fpv: 0,
+      a_pdc: 0,
+      a_somos: 0,
+      a_mas_ipsp: 0,
+      a_ca: 0,
+      a_mts: 0,
+      a_pan_bol: 0,
+      a_ucs: 0,
+      a_blancos: 0,
+      a_nulos: 0,
+      c_llenada: false,
+      c_sumate: 0,
+      c_fpv: 0,
+      c_pdc: 0,
+      c_somos: 0,
+      c_mas_ipsp: 0,
+      c_ca: 0,
+      c_mts: 0,
+      c_pan_bol: 0,
+      c_ucs: 0,
+      c_blancos: 0,
+      c_nulos: 0,
+      img_1: "",
+      img_2: "",
+      img_3: "",
+      fotoenviada: false,
+      observada: false,
+      revisadafoto: false,
+      revisadaacta: false,
+      usuario: uid,
+    };
+
+    const mesaAlcaldeActualizado = await MesaAlcalde.findByIdAndUpdate(
+      id,
+      cambiosMesaAlcalde,
+      { new: true }
+    );
+
+    res.json({
+      ok: true,
+      MesaAlcalde: mesaAlcaldeActualizado,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      ok: false,
+      msg: "Hable con el administrador",
+    });
+  }
+};
+
+
 
 
 
@@ -234,6 +303,7 @@ module.exports = {
   getMesaAlcaldeBuscar,
   crearMesaAlcalde,
   actualizarMesaAlcalde,
+  resetMesaAlcalde,
   getMesaAlcaldeById,
   getMesaAlcaldeByCodido,
   crearfoto
