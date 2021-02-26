@@ -33,6 +33,80 @@ const getMesaAlcalde = async (req, res = response) => {
 };
 
 
+const getMesaAlcaldeReporte = async (req, res = response) => {
+  const uid = req.uid;
+  // console.log(uid);
+  const usuarioDB = await Usuario.findById(uid);
+  // console.log(usuarioDB.recinto);
+
+  if (usuarioDB.role === "ADMIN_ROLE") {
+
+    const mesasAlcalde = await MesaAlcalde.find()
+      // .populate("usuario", "nombre img")
+      .populate("recinto", "nombre img");
+    res.json({
+      ok: true,
+      mesasAlcalde,
+    });
+  } else {
+    // .find({ recinto: { _id: usuarioDB.recinto }})
+    const votosAlcalde = await MesaAlcalde
+    .aggregate(
+      [
+        { "$match": { "recinto": usuarioDB.recinto }},
+        { "$match": { "a_llenada": true }},
+        { 
+          $group: 
+            { 
+              _id: "$recinto",
+              a_sumate: { $sum: "$a_sumate"},
+              a_fpv: { $sum: "$a_fpv"},
+              a_pdc: { $sum: "$a_pdc"},
+              a_somos: { $sum: "$a_somos"},
+              a_mas_ipsp: { $sum: "$a_mas_ipsp"},
+              a_ca: { $sum: "$a_ca"},
+              a_mts: { $sum: "$a_mts"},
+              a_pan_bol: { $sum: "$a_pan_bol"},
+              a_ucs: { $sum: "$a_ucs"}
+            }
+        }
+      ]
+    )
+    let porcentaje = new Object();
+    const votos = votosAlcalde[0];
+    if ( votos ) {
+      const total = votos.a_sumate + 
+                    votos.a_fpv + 
+                    votos.a_pdc + 
+                    votos.a_somos + 
+                    votos.a_mas_ipsp + 
+                    votos.a_ca + 
+                    votos.a_mts +
+                    votos.a_pan_bol +
+                    votos.a_ucs
+    
+      porcentaje.a_sumate = Number(((votos.a_sumate * 100) / total).toFixed(2));
+      porcentaje.a_fpv = Number(((votos.a_fpv * 100) / total).toFixed(2));
+      porcentaje.a_pdc = Number(((votos.a_pdc * 100) / total).toFixed(2));
+      porcentaje.a_somos = Number(((votos.a_somos * 100) / total).toFixed(2));
+      porcentaje.a_mas_ipsp = Number(((votos.a_mas_ipsp * 100) / total).toFixed(2));
+      porcentaje.a_ca = Number(((votos.a_ca * 100) / total).toFixed(2));
+      porcentaje.a_mts = Number(((votos.a_mts * 100) / total).toFixed(2));
+      porcentaje.a_pan_bol = Number(((votos.a_pan_bol * 100) / total).toFixed(2));
+      porcentaje.a_ucs = Number(((votos.a_ucs * 100) / total).toFixed(2));
+    }
+    // console.log("result: " + result.a_sumate)
+      //.populate("recinto", "nombre img");
+        // .populate("Recinto", "nombre img");
+    res.json({
+      ok: true,
+      votosAlcalde,
+      porcentaje
+    });
+  }
+};
+
+
 const getMesaAlcaldeBuscar = async (req, res = response) => {
   const uid = req.uid;
   
@@ -56,6 +130,9 @@ const getMesaAlcaldeBuscar = async (req, res = response) => {
       });
   }
 };
+
+
+
 
 const getMesaAlcaldeById = async (req, res = response) => {
   const id = req.params.id;
@@ -301,6 +378,7 @@ const crearfoto = async (req, res = response) => {
 module.exports = {
   getMesaAlcalde,
   getMesaAlcaldeBuscar,
+  getMesaAlcaldeReporte,
   crearMesaAlcalde,
   actualizarMesaAlcalde,
   resetMesaAlcalde,

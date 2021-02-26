@@ -11,6 +11,7 @@ const { validarJWT } = require("../middlewares/validar-jwt");
 const {
   getMesaAlcalde,
   getMesaAlcaldeBuscar,
+  getMesaAlcaldeReporte,
   crearMesaAlcalde,
   actualizarMesaAlcalde,
   resetMesaAlcalde,
@@ -22,9 +23,11 @@ const {
 const router = Router();
 
 router.get("/", validarJWT, getMesaAlcalde);
+router.get( '/reporte/', validarJWT , getMesaAlcaldeReporte );
 router.get("/:id", validarJWT, getMesaAlcaldeById);
 router.get("/codigo/:codigo", validarJWT, getMesaAlcaldeByCodido);
 router.get("/buscar/:busqueda", validarJWT, getMesaAlcaldeBuscar);
+
 
 router.post(
   "/",
