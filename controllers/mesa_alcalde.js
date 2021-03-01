@@ -151,7 +151,9 @@ const getMesaAlcaldeByCodido = async (req, res = response) => {
   const codigo = req.params.codigo;
 
   const mesaAlcalde = await MesaAlcalde.find({ codigo: codigo })
-  .populate("usuario", "nombre img");
+  .populate("usuario", "nombre img")
+  .populate("recinto", "nombre img");
+
 
   res.json({
     ok: true,
