@@ -12,6 +12,8 @@ const {
   getMesaAlcalde,
   getMesaAlcaldeBuscar,
   getMesaAlcaldeReporte,
+  getTotalAlcalde,
+  getTotalConcejales,
   crearMesaAlcalde,
   actualizarMesaAlcalde,
   resetMesaAlcalde,
@@ -24,6 +26,8 @@ const router = Router();
 
 router.get("/", validarJWT, getMesaAlcalde);
 router.get( '/reporte/', validarJWT , getMesaAlcaldeReporte );
+router.get( '/total_alcalde/', [] , getTotalAlcalde );
+router.get( '/total_concejal/', [] , getTotalConcejales );
 router.get("/:id", validarJWT, getMesaAlcaldeById);
 router.get("/codigo/:codigo", validarJWT, getMesaAlcaldeByCodido);
 router.get("/buscar/:busqueda", validarJWT, getMesaAlcaldeBuscar);

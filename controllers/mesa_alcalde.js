@@ -107,6 +107,135 @@ const getMesaAlcaldeReporte = async (req, res = response) => {
 };
 
 
+const getTotalAlcalde = async (req, res = response) => {
+   const [votosAlcalde,cantidadMesas] = await Promise.all([MesaAlcalde
+    .aggregate(
+      [
+        { "$match": { "a_llenada": true }},
+        { 
+          $group: 
+            { 
+              _id: "$a_llenada",
+              a_sumate: { $sum: "$a_sumate"},
+              a_fpv: { $sum: "$a_fpv"},
+              a_pdc: { $sum: "$a_pdc"},
+              a_somos: { $sum: "$a_somos"},
+              a_mas_ipsp: { $sum: "$a_mas_ipsp"},
+              a_ca: { $sum: "$a_ca"},
+              a_mts: { $sum: "$a_mts"},
+              a_pan_bol: { $sum: "$a_pan_bol"},
+              a_ucs: { $sum: "$a_ucs"},
+              a_blancos: { $sum: "$a_blancos"},
+              a_nulos: { $sum: "$a_nulos"},
+            }
+        }
+      ]
+    ),  MesaAlcalde.countDocuments({a_llenada:true})]);
+
+    let porcentaje = new Object();
+    const votos = votosAlcalde[0];
+    if ( votos ) {
+      const totalValidos = votos.a_sumate + 
+                    votos.a_fpv + 
+                    votos.a_pdc + 
+                    votos.a_somos + 
+                    votos.a_mas_ipsp + 
+                    votos.a_ca + 
+                    votos.a_mts +
+                    votos.a_pan_bol +
+                    votos.a_ucs;
+      
+      const totalVotos = totalValidos + votos.a_blancos + votos.a_nulos;
+    
+      porcentaje.a_sumate = Number(((votos.a_sumate * 100) / totalValidos).toFixed(2));
+      porcentaje.a_fpv = Number(((votos.a_fpv * 100) / totalValidos).toFixed(2));
+      porcentaje.a_pdc = Number(((votos.a_pdc * 100) / totalValidos).toFixed(2));
+      porcentaje.a_somos = Number(((votos.a_somos * 100) / totalValidos).toFixed(2));
+      porcentaje.a_mas_ipsp = Number(((votos.a_mas_ipsp * 100) / totalValidos).toFixed(2));
+      porcentaje.a_ca = Number(((votos.a_ca * 100) / totalValidos).toFixed(2));
+      porcentaje.a_mts = Number(((votos.a_mts * 100) / totalValidos).toFixed(2));
+      porcentaje.a_pan_bol = Number(((votos.a_pan_bol * 100) / totalValidos).toFixed(2));
+      porcentaje.a_ucs = Number(((votos.a_ucs * 100) / totalValidos).toFixed(2));
+      porcentaje.a_validos = Number(((totalValidos * 100) / totalVotos).toFixed(2));
+      porcentaje.a_nulos = Number(((votos.a_nulos * 100) / totalVotos).toFixed(2));
+      porcentaje.a_blancos = Number(((votos.a_blancos * 100) / totalVotos).toFixed(2));
+
+
+    }
+    res.json({
+      ok: true,
+      cantidadMesas,
+      votosAlcalde,
+      porcentaje
+    });
+  
+};
+
+const getTotalConcejales = async (req, res = response) => {
+  const [votosConcejal,cantidadMesas] = await Promise.all([MesaAlcalde
+   .aggregate(
+     [
+       { "$match": { "c_llenada": true }},
+       { 
+         $group: 
+           { 
+             _id: "$c_llenada",
+             c_sumate: { $sum: "$c_sumate"},
+             c_fpv: { $sum: "$c_fpv"},
+             c_pdc: { $sum: "$c_pdc"},
+             c_somos: { $sum: "$c_somos"},
+             c_mas_ipsp: { $sum: "$c_mas_ipsp"},
+             c_ca: { $sum: "$c_ca"},
+             c_mts: { $sum: "$c_mts"},
+             c_pan_bol: { $sum: "$c_pan_bol"},
+             c_ucs: { $sum: "$c_ucs"},
+             c_blancos: { $sum: "$c_blancos"},
+             c_nulos: { $sum: "$c_nulos"},
+           }
+       }
+     ]
+   ) ,  MesaAlcalde.countDocuments({c_llenada:true})]);
+
+   
+   let porcentaje = new Object();
+   const votos = votosConcejal[0];
+   if ( votos ) {
+     const totalValidos = votos.c_sumate + 
+                   votos.c_fpv + 
+                   votos.c_pdc + 
+                   votos.c_somos + 
+                   votos.c_mas_ipsp + 
+                   votos.c_ca + 
+                   votos.c_mts +
+                   votos.c_pan_bol +
+                   votos.c_ucs;
+     
+     const totalVotos = totalValidos + votos.c_blancos + votos.c_nulos;
+   
+     porcentaje.c_sumate = Number(((votos.c_sumate * 100) / totalValidos).toFixed(2));
+     porcentaje.c_fpv = Number(((votos.c_fpv * 100) / totalValidos).toFixed(2));
+     porcentaje.c_pdc = Number(((votos.c_pdc * 100) / totalValidos).toFixed(2));
+     porcentaje.c_somos = Number(((votos.c_somos * 100) / totalValidos).toFixed(2));
+     porcentaje.c_mas_ipsp = Number(((votos.c_mas_ipsp * 100) / totalValidos).toFixed(2));
+     porcentaje.c_ca = Number(((votos.c_ca * 100) / totalValidos).toFixed(2));
+     porcentaje.c_mts = Number(((votos.c_mts * 100) / totalValidos).toFixed(2));
+     porcentaje.c_pan_bol = Number(((votos.c_pan_bol * 100) / totalValidos).toFixed(2));
+     porcentaje.c_ucs = Number(((votos.c_ucs * 100) / totalValidos).toFixed(2));
+     porcentaje.c_validos = Number(((totalValidos * 100) / totalVotos).toFixed(2));
+     porcentaje.c_nulos = Number(((votos.c_nulos * 100) / totalVotos).toFixed(2));
+     porcentaje.c_blancos = Number(((votos.c_blancos * 100) / totalVotos).toFixed(2));
+
+   }
+   res.json({
+     ok: true,
+     cantidadMesas,
+     votosConcejal,
+     porcentaje
+   });
+ 
+};
+
+
 const getMesaAlcaldeBuscar = async (req, res = response) => {
   const uid = req.uid;
   
@@ -381,6 +510,8 @@ module.exports = {
   getMesaAlcalde,
   getMesaAlcaldeBuscar,
   getMesaAlcaldeReporte,
+  getTotalAlcalde,
+  getTotalConcejales,
   crearMesaAlcalde,
   actualizarMesaAlcalde,
   resetMesaAlcalde,
